@@ -1,0 +1,47 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.11.35327.3
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaskManagerApiAF", "TaskManagerApiAF\TaskManagerApiAF.csproj", "{BB9BF763-52F2-41EF-9AF8-A5EB52699DAC}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaskManagementAF.Tests", "TaskManagementAF.Tests\TaskManagementAF.Tests.csproj", "{A075A741-CC51-477E-A50B-7E2744794E59}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{912C658A-EB84-4D19-BF53-D54962B62987}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{E4FF9D23-38D6-466E-98F0-EA66C2ED7B11}"
+	ProjectSection(SolutionItems) = preProject
+		TaskManagerApiAF\Readme.md = TaskManagerApiAF\Readme.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{79EF8CAD-CDDB-4979-8314-E822F98C01D5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{DAB1928D-DA6E-439E-8D7E-460EFE198090}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BB9BF763-52F2-41EF-9AF8-A5EB52699DAC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BB9BF763-52F2-41EF-9AF8-A5EB52699DAC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BB9BF763-52F2-41EF-9AF8-A5EB52699DAC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BB9BF763-52F2-41EF-9AF8-A5EB52699DAC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A075A741-CC51-477E-A50B-7E2744794E59}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A075A741-CC51-477E-A50B-7E2744794E59}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A075A741-CC51-477E-A50B-7E2744794E59}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A075A741-CC51-477E-A50B-7E2744794E59}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{BB9BF763-52F2-41EF-9AF8-A5EB52699DAC} = {912C658A-EB84-4D19-BF53-D54962B62987}
+		{A075A741-CC51-477E-A50B-7E2744794E59} = {912C658A-EB84-4D19-BF53-D54962B62987}
+		{DAB1928D-DA6E-439E-8D7E-460EFE198090} = {79EF8CAD-CDDB-4979-8314-E822F98C01D5}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {ECAD284A-066E-45DB-9612-5814496EA3D7}
+	EndGlobalSection
+EndGlobal
