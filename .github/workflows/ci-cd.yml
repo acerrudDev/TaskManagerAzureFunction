@@ -30,7 +30,7 @@ jobs:
         run: dotnet build ./src/TaskManagerApiAF/TaskManagerApiAF.csproj --configuration Release --no-restore
 
       - name: Run tests
-        run: dotnet test ./src/TaskManagementAF.Tests/TaskManagementApiAF.Tests.csproj --no-build --verbosity normal
+        run: dotnet test ./src/TaskManagementAF.Tests/TaskManagementAF.Tests.csproj --no-build --verbosity normal
 
       - name: Publish project
         run: dotnet publish ./src/TaskManagerApiAF/TaskManagerApiAF.csproj -c Release -o ./publish_output
