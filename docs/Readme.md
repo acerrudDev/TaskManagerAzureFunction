@@ -1,4 +1,4 @@
-﻿# Task Management API - Azure Functions
+﻿# Task Management API - Azure Functions with C#
 
 Este proyecto es un servicio de gestión de tareas que expone una API RESTful, implementado como una Azure Function 
 en el modelo Isolated Worker.
