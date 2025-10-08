@@ -1,0 +1,44 @@
+﻿name: CI/CD - TaskManagerApiAF
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    branches:
+      - main
+      - develop
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restore dependencies
+        run: dotnet restore ./src/TaskManagerApiAF/TaskManagerApiAF.csproj
+
+      - name: Build
+        run: dotnet build ./src/TaskManagerApiAF/TaskManagerApiAF.csproj --configuration Release --no-restore
+
+      - name: Run tests
+        run: dotnet test ./src/TaskManagementAF.Tests/TaskManagementApiAF.Tests.csproj --no-build --verbosity normal
+
+      - name: Publish project
+        run: dotnet publish ./src/TaskManagerApiAF/TaskManagerApiAF.csproj -c Release -o ./publish_output
+
+      - name: Deploy to Azure Functions
+        uses: azure/functions-action@v1
+        with:
+          app-name: 'TaskManagerApiAF'
+          package: './publish_output'
+        env:
+          AZURE_FUNCTIONAPP_PUBLISH_PROFILE: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE }}
