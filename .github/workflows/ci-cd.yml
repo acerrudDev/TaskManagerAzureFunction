@@ -27,13 +27,16 @@ jobs:
         run: dotnet restore ./src/TaskManagerApiAF/TaskManagerApiAF.csproj
 
       - name: Build
-        run: dotnet build ./src/TaskManagerApiAF/TaskManagerApiAF.csproj --configuration Release --no-restore
+        run: dotnet build ./src/TaskManagerApiAF/TaskManagerApiAF.csproj --configuration Release --no-restore      
 
      # - name: Run tests
      #  run: dotnet test ./src/TaskManagementAF.Tests/TaskManagementAF.Tests.csproj --no-build --verbosity normal
 
       - name: Publish project
         run: dotnet publish ./src/TaskManagerApiAF/TaskManagerApiAF.csproj -c Release -o ./publish_output
+
+      - name: List publish output files
+        run: ls -R ./publish_output
 
       - name: Deploy to Azure Functions
         uses: azure/functions-action@v1
