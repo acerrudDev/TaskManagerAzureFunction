@@ -35,8 +35,8 @@ jobs:
       - name: Publish project
         run: dotnet publish ./src/TaskManagerApiAF/TaskManagerApiAF.csproj -c Release -o ./publish_output
 
-      #- name: List publish output files
-      # run: ls -R ./publish_output
+      - name: List publish output files
+        run: ls -R ./publish_output
 
       - name: Deploy to Azure Functions
         uses: azure/functions-action@v1
