@@ -8,25 +8,27 @@ using System.Threading.Tasks;
 using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
+using TaskManagerApiAF.Interfaces.IServices;
 
 namespace TaskManagerApiAF.Utils
 {
-    public static class TokenValidator
+    public class TokenAuthService : ITokenAuthService
     {
-        private static ConfigurationManager<OpenIdConnectConfiguration> _configManager;
+        private readonly ConfigurationManager<OpenIdConnectConfiguration> _configManager;
+        private readonly IConfiguration _config;
 
-        public static void Init(string authority) 
+        public TokenAuthService(IConfiguration config)
         {
+            _config = config;
+            var authority = _config["OpenId_Authority"];
             _configManager = new ConfigurationManager<OpenIdConnectConfiguration>(
-                $"{authority.TrimEnd('/')}/.well-known/openid-configuration", 
+                $"{authority.TrimEnd('/')}/.well-known/openid-configuration",
                 new OpenIdConnectConfigurationRetriever());
 
         }
 
-        public static async Task<ClaimsPrincipal> ValidateTokenAsync(string token, string validAudience)
-        {
-            if (_configManager == null)
-                throw new InvalidOperationException("TokenValidator not initialized. Call Init(authority).");
+        public async Task<ClaimsPrincipal> ValidateTokenAsync(string token, string validAudience)
+        {           
 
             var openIdConfig = await _configManager.GetConfigurationAsync();
             var validationParameters = new TokenValidationParameters
@@ -41,8 +43,22 @@ namespace TaskManagerApiAF.Utils
 
             var handler = new JwtSecurityTokenHandler();
             SecurityToken validatedToken;
-            var principal = handler.ValidateToken(token, validationParameters, out validatedToken);
-            return principal;
+            try
+            {
+                var principal = handler.ValidateToken(token, validationParameters, out validatedToken);
+                return principal;
+            }
+            catch (SecurityTokenException)
+            {
+                return null;
+            }
+
+        }
+
+        public async Task<ClaimsPrincipal?> ValidateAndSyncUserAsync(string token)
+        {
+            var audience = _config["OpenId_Audience"];
+            return await ValidateTokenAsync(token, audience);
         }
     }
 }

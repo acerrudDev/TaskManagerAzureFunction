@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System.Net;
 using System.Security.Claims;
+using TaskManagerApiAF.Helpers;
 using TaskManagerApiAF.Interfaces.IServices;
 using TaskManagerApiAF.Models;
 using TaskManagerApiAF.Utils;
@@ -17,40 +18,47 @@ public class UserFunction
     private readonly ILogger<UserFunction> _logger;
     private readonly IConfiguration _config;
     private readonly IUserService _userService;
+    private readonly ITokenAuthService _tokenAuthService;
 
-    public UserFunction(ILogger<UserFunction> logger, IConfiguration config, IUserService userService)
+    public UserFunction(ILogger<UserFunction> logger, IConfiguration config, IUserService userService, ITokenAuthService tokenAuthService)
     {
         _logger = logger;
         _config = config;
         _userService = userService;
+        _tokenAuthService = tokenAuthService;
+
     }
 
     [Function("UserFunction")]
     public async Task<HttpResponseData> Run(
         [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "users")] HttpRequestData req)
     {
-        _logger.LogInformation("C# HTTP trigger function processed a request.");
-        var authHeader = req.Headers.GetValues("Authorization")
-            .FirstOrDefault();
+        _logger.LogInformation("C# HTTP trigger function processing a request.");
 
-        if (string.IsNullOrEmpty(authHeader) || !authHeader.StartsWith("Bearer "))
-            return req.CreateResponse(HttpStatusCode.Unauthorized);
+        return await AuthorizedFunctionExecutor.ExecuteAsync(
+            req,
+            _config,
+            _tokenAuthService,
+            async principal =>
+            {
+                var userData = new UsersTm
+                {
+                    ExternalId = principal.FindFirst("sub")?.Value ?? principal.FindFirst(ClaimTypes.NameIdentifier)?.Value,
+                    Provider = _config["OpenId_Provider"],
+                    Email = principal.FindFirst(ClaimTypes.Email)?.Value ?? principal.FindFirst("email")?.Value,
+                    DisplayName = principal.FindFirst("name")?.Value ?? principal.FindFirst("preferred_username")?.Value,
+                    CreatedAt = DateTime.UtcNow
+                };
 
-        string token = authHeader.Substring("Bearer ".Length).Trim();
-        var principal = await TokenValidator.ValidateTokenAsync(token, _config["OpenId_Audience"]);
+                var createdUser = await _userService.CreateUser(userData);
 
-        var userData = new UsersTm();
+                var resp = req.CreateResponse(HttpStatusCode.OK);
+                await resp.WriteAsJsonAsync(new { createdUser.UserId, createdUser.Email, createdUser.DisplayName });
+                return resp;
 
-        userData.ExternalId = principal.FindFirst("sub")?.Value ?? principal.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        userData.Provider = _config["OpenId_Provider"];
-        userData.Email = principal.FindFirst(ClaimTypes.Email)?.Value ?? principal.FindFirst("email")?.Value;
-        userData.DisplayName = principal.FindFirst("name")?.Value ?? principal.FindFirst("preferred_username")?.Value;
-        userData.CreatedAt = DateTime.UtcNow;
+            }
+        );
 
-        var createdUser = await _userService.CreateUser(userData);
-
-        var resp = req.CreateResponse(HttpStatusCode.OK);
-        await resp.WriteAsJsonAsync(new { createdUser.UserId, createdUser.Email, createdUser.DisplayName });
-        return resp;
+        
     }
 }

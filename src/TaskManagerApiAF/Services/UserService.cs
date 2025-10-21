@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using TaskManagerApiAF.Interfaces.IServices;
@@ -31,6 +32,11 @@ namespace TaskManagerApiAF.Services
         }
 
         public Task<List<UsersTm>> GetUsers()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task RegisterIfNotExistsAsync(ClaimsPrincipal principal)
         {
             throw new NotImplementedException();
         }
