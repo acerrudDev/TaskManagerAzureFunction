@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using TaskManagerApiAF.Models;
@@ -16,5 +17,6 @@ namespace TaskManagerApiAF.Interfaces.IServices
         Task DeleteSpecificUser(Guid userId);
         Task<bool> DeleteUser(Guid userId);
         Task<UsersTm> GetSpecificUser(Guid taskId);
+        Task RegisterIfNotExistsAsync(ClaimsPrincipal principal);
     }
 }
